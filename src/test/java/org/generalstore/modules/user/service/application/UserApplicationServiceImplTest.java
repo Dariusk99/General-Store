@@ -33,21 +33,21 @@ public class UserApplicationServiceImplTest {
     UserApplicationServiceImpl userApplicationService;
 
     @Test
-    void shouldRegisterUserSucessfully() {
-        // Given
-        RegisterUserDTO registerUserDTO = new RegisterUserDTO();
-        registerUserDTO.setEmail("qwe@email.com");
-        registerUserDTO.setUsername("username");
-        registerUserDTO.setPassword("password");
+    void registerUser_shouldReturnUserDTO_whenRegisterSuccessful() {
+        // Arrange
+        RegisterUserDTO source = new RegisterUserDTO();
+        source.setEmail("qwe@email.com");
+        source.setUsername("username");
+        source.setPassword("password");
 
-        User userEntity = new User();
-        userEntity.setEmail(registerUserDTO.getEmail());
-        userEntity.setUsername(registerUserDTO.getUsername());
+        User sourceEntity = new User();
+        sourceEntity.setEmail(source.getEmail());
+        sourceEntity.setUsername(source.getUsername());
 
         User savedUser = new User(
                 1L,
-                registerUserDTO.getEmail(),
-                registerUserDTO.getUsername(),
+                source.getEmail(),
+                source.getUsername(),
                 "encodedpassword",
                 true,
                 Set.of(Role.ROLE_USER)
@@ -55,26 +55,25 @@ public class UserApplicationServiceImplTest {
 
         UserDTO expectedDTO = new UserDTO(
                 1L,
-                registerUserDTO.getUsername()
+                source.getUsername()
         );
 
-        // When
-        when(userMapper.toRegisterEntity(registerUserDTO)).thenReturn(userEntity);
-        when(passwordEncoder.encode(registerUserDTO.getPassword())).thenReturn("encodedpassword");
-        when(userDomainService.register(userEntity)).thenReturn(savedUser);
+        when(userMapper.toRegisterEntity(source)).thenReturn(sourceEntity);
+        when(passwordEncoder.encode(source.getPassword())).thenReturn("encodedpassword");
+        when(userDomainService.register(sourceEntity)).thenReturn(savedUser);
         when(userMapper.toDTO(savedUser)).thenReturn(expectedDTO);
 
-        // Execute
-        UserDTO result = userApplicationService.registerUser(registerUserDTO);
+        // Act
+        UserDTO result = userApplicationService.registerUser(source);
 
-        // Then
+        // Assert
         assertThat(result).isEqualTo(expectedDTO);
-        assertThat(userEntity.getPassword()).isEqualTo("encodedpassword");
-        assertThat(userEntity.getRoles()).containsExactly(Role.ROLE_USER);
+        assertThat(sourceEntity.getPassword()).isEqualTo("encodedpassword");
+        assertThat(sourceEntity.getRoles()).containsExactly(Role.ROLE_USER);
 
-        verify(userMapper).toRegisterEntity(registerUserDTO);
-        verify(passwordEncoder).encode(registerUserDTO.getPassword());
-        verify(userDomainService).register(userEntity);
+        verify(userMapper).toRegisterEntity(source);
+        verify(passwordEncoder).encode(source.getPassword());
+        verify(userDomainService).register(sourceEntity);
         verify(userMapper).toDTO(savedUser);
     }
 }
