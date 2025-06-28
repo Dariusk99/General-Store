@@ -21,9 +21,9 @@ class UserApplicationServiceImpl implements UserApplicationService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDTO registerUser(RegisterUserDTO dto) {
-        User user = userMapper.toRegisterEntity(dto);
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    public UserDTO registerUser(RegisterUserDTO sourceDTO) {
+        User user = userMapper.toRegisterEntity(sourceDTO);
+        user.setPassword(passwordEncoder.encode(sourceDTO.getPassword()));
         user.setRoles(Set.of(Role.ROLE_USER));
         User savedUser = userDomainService.register(user);
 

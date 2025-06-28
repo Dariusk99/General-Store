@@ -27,48 +27,50 @@ public class UserDomainServiceImplTest {
     private UserDomainServiceImpl userService;
 
     @Test
-    void register_shouldRegisterUser_WhenEmailNotExists() {
+    void register_shouldRegisterUser_whenEmailNotExists() {
         // Arrange
-        User source = new User(
-                1L,
+        User sourceUser = new User(
+                null,
                 "email@email.com",
                 "username",
                 "password",
                 true,
                 Set.of(Role.ROLE_USER)
         );
-        when(repository.existsByEmail(source.getEmail())).thenReturn(false);
-        when(repository.save(source)).thenReturn(source);
+
+        when(repository.existsByEmail(sourceUser.getEmail())).thenReturn(false);
+        when(repository.save(sourceUser)).thenReturn(sourceUser);
 
         // Act
-        User saved = userService.register(source);
+        User actualResult = userService.register(sourceUser);
 
         // Assert
-        assertThat(saved).isEqualTo(source);
-        verify(repository).existsByEmail(source.getEmail());
-        verify(repository).save(source);
+        assertThat(actualResult).isEqualTo(sourceUser);
+        verify(repository).existsByEmail(sourceUser.getEmail());
+        verify(repository).save(sourceUser);
     }
 
     @Test
     void register_shouldThrowException_whenUserWithThisEmailExists() {
         // Arrange
-        User source = new User(
-                1L,
+        User sourceUser = new User(
+                null,
                 "email@email.com",
                 "username",
                 "password",
                 true,
                 Set.of(Role.ROLE_USER)
         );
-        when(repository.existsByEmail(source.getEmail())).thenReturn(true);
+
+        when(repository.existsByEmail(sourceUser.getEmail())).thenReturn(true);
 
         // Act
         EntityExistsException exception = assertThrows(EntityExistsException.class, () -> {
-            userService.register(source);
+            userService.register(sourceUser);
         });
 
         // Assert
-        assertEquals("User already exist with email: " + source.getEmail(), exception.getMessage());
-        verify(repository, never()).save(source);
+        assertEquals("User already exist with email: " + sourceUser.getEmail(), exception.getMessage());
+        verify(repository, never()).save(sourceUser);
     }
 }
