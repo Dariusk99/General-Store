@@ -1,9 +1,9 @@
-package org.generalstore.modules.user.controller;
+package org.generalstore.modules.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.generalstore.modules.user.dto.RegisterUserDTO;
-import org.generalstore.modules.user.dto.UserDTO;
-import org.generalstore.modules.user.service.application.UserApplicationService;
+import org.generalstore.modules.product.dto.AddProductDTO;
+import org.generalstore.modules.product.dto.ProductDTO;
+import org.generalstore.modules.product.service.application.ProductApplicationService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -22,9 +24,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserApi.class)
+@WebMvcTest(ProductApi.class)
 @AutoConfigureMockMvc(addFilters = false)
-public class UserApiTest {
+public class ProductApiTest {
+
+    @Autowired
+    private ProductApplicationService productApplicationService;
 
     @Autowired
     private MockMvc mockMvc;
@@ -32,49 +37,49 @@ public class UserApiTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    UserApplicationService userApplicationService;
-
     @TestConfiguration
     static class MockConfig {
         @Bean
-        UserApplicationService userApplicationService() {
-            return Mockito.mock(UserApplicationService.class);
+        ProductApplicationService productApplicationService() {
+            return Mockito.mock(ProductApplicationService.class);
         }
     }
 
     @Test
-    void registerUser_shouldReturn201AndUserDTO_whenRequestIsValid () throws Exception {
+    void addProduct_shouldReturn201AndProductDTO_whenRequestIsValid() throws Exception {
         // Arrange
-        RegisterUserDTO sourceUserDTO = new RegisterUserDTO(
-                "username",
-                "email@email.com",
-                "password"
+        AddProductDTO sourceProductDTO = new AddProductDTO(
+                "name",
+                "description",
+                5,
+                BigDecimal.valueOf(12.99)
         );
 
-        UserDTO expectedResponse = new UserDTO(
-                null,
-                sourceUserDTO.getUsername()
+        ProductDTO expectedResultDTO = new ProductDTO(
+                1L,
+                sourceProductDTO.getName(),
+                sourceProductDTO.getDescription(),
+                sourceProductDTO.getQuantity(),
+                sourceProductDTO.getPrice()
         );
 
-        when(userApplicationService.registerUser(any(RegisterUserDTO.class)))
-                .thenReturn(expectedResponse);
+        when(productApplicationService.addProduct(any(AddProductDTO.class)))
+                .thenReturn(expectedResultDTO);
 
         // Act & Assert
-        MvcResult mvcResult = mockMvc.perform(post("/api/users")
+        MvcResult mvcResult = mockMvc.perform(post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(sourceUserDTO)))
+                .content(objectMapper.writeValueAsString(sourceProductDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-
         String jsonResponse = mvcResult.getResponse().getContentAsString();
-        UserDTO actualResponse = objectMapper.readValue(jsonResponse, UserDTO.class);
+        ProductDTO actualResult = objectMapper.readValue(jsonResponse, ProductDTO.class);
 
-        assertThat(actualResponse)
+        assertThat(actualResult)
                 .usingRecursiveComparison()
                 .ignoringFields("id")
-                .isEqualTo(expectedResponse);
+                .isEqualTo(expectedResultDTO);
     }
 }
