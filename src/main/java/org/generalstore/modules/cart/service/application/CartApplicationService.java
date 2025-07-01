@@ -4,5 +4,5 @@ import org.generalstore.modules.cart.dto.CartDTO;
 
 public interface CartApplicationService {
 
-    CartDTO getUserCartOrCreate();
+    CartDTO getCartOrCreate(String username, CartDTO localStorageCart);
 }

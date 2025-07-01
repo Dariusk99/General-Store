@@ -24,4 +24,8 @@ public class Cart {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void mergeCart(Cart cart) {
+        System.out.println("scalanie koszyków");
+    }
 }

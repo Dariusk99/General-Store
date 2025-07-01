@@ -29,4 +29,9 @@ class UserApplicationServiceImpl implements UserApplicationService {
 
         return userMapper.toDTO(savedUser);
     }
+
+    @Override
+    public UserDTO getUserByUsername(String username) {
+        return userMapper.toDTO(userDomainService.findUserByUsername(username));
+    }
 }

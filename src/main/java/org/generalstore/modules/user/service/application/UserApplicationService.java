@@ -6,4 +6,5 @@ import org.generalstore.modules.user.dto.UserDTO;
 public interface UserApplicationService {
 
     UserDTO registerUser(RegisterUserDTO sourceDTO);
+    UserDTO getUserByUsername(String username);
 }

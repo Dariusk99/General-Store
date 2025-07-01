@@ -1,17 +1,16 @@
-package org.generalstore.modules.cart.dto;
+package org.generalstore.modules.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartDTO {
+public class UserLoginDTO {
 
-    private UUID id;
+    private String username;
+    private String password;
 }
