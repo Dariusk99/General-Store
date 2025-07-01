@@ -51,7 +51,7 @@ public class UserApiTest {
                 sourceUserDTO.getUsername()
         );
 
-        when(userApplicationService.registerUser(any(RegisterUserDTO.class)))
+        when(userApplicationService.registerUserWithCart(any(RegisterUserDTO.class)))
                 .thenReturn(expectedResponse);
 
         // Act & Assert

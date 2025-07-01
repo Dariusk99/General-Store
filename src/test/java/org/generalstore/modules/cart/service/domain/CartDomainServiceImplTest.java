@@ -1,7 +1,8 @@
 package org.generalstore.modules.cart.service.domain;
 
-import org.generalstore.modules.cart.entity.Cart;
-import org.generalstore.modules.cart.repository.CartRepository;
+import org.generalstore.modules.cart.core.entity.Cart;
+import org.generalstore.modules.cart.core.repository.CartRepository;
+import org.generalstore.modules.cart.core.service.domain.CartDomainServiceImpl;
 import org.generalstore.modules.user.entity.Role;
 import org.generalstore.modules.user.entity.User;
 import org.junit.jupiter.api.Test;

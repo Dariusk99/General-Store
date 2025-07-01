@@ -1,22 +1,25 @@
 package org.generalstore.modules.cart.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.generalstore.modules.cart.dto.CartDTO;
-import org.generalstore.modules.cart.service.application.CartApplicationService;
+import org.generalstore.modules.auth.util.JwtUtil;
+import org.generalstore.modules.cart.core.dto.CartDTO;
+import org.generalstore.modules.user.dto.RegisterUserDTO;
+import org.generalstore.modules.user.service.application.UserApplicationService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,20 +35,34 @@ public class CartApiIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockitoBean
-    private CartApplicationService cartApplicationService;
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private UserApplicationService userApplicationService;
+
+    @BeforeEach
+    void setup() {
+        RegisterUserDTO registerUserDTO = new RegisterUserDTO(
+                "user@email.com",
+                "username",
+                "password"
+        );
+
+        userApplicationService.registerUserWithCart(registerUserDTO);
+    }
 
     @Test
-    void getMyCart_shouldReturn200WithUserCartDTO() throws Exception {
+    void addProductToCart_returnNewLocalStorageCart_whenNotAuthenticated() throws Exception {
         // Arrange
-        String sourceUsername = "testuser";
-        CartDTO expectedCartDTO = new CartDTO(
-                null
+        CartDTO localStorageCartDTO = new CartDTO(
+                UUID.randomUUID()
         );
 
         // Act && Assert
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/api/carts")
-                .with(user(sourceUsername)))
+        MvcResult mvcResult = mockMvc.perform(post("/api/carts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(localStorageCartDTO)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -53,9 +70,26 @@ public class CartApiIntegrationTest {
         String jsonResponse = mvcResult.getResponse().getContentAsString();
         CartDTO actualResponse = objectMapper.readValue(jsonResponse, CartDTO.class);
 
-        assertThat(actualResponse)
-                .usingRecursiveComparison()
-                .ignoringFields("id")
-                .isEqualTo(expectedCartDTO);
+        assertThat(actualResponse).isNotNull();
+    }
+
+    @Test
+    void addProductToCart_returnUserCart_whenUserAuthenticated() throws Exception {
+        // Arrange
+        String token = jwtUtil.generateToken("username");
+        CartDTO localStorageCartDTO = new CartDTO(UUID.randomUUID());
+
+        // Act && Assert
+        mockMvc.perform(post("/api/carts")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(localStorageCartDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    CartDTO actualCart = objectMapper.readValue(json, CartDTO.class);
+                    assertThat(actualCart).isNotNull();
+                });
     }
 }

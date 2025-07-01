@@ -1,4 +1,4 @@
-package org.generalstore.modules.cart.dto;
+package org.generalstore.modules.cart.core.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

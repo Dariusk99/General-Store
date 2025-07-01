@@ -1,7 +1,7 @@
-package org.generalstore.modules.cart.mapper;
+package org.generalstore.modules.cart.core.mapper;
 
-import org.generalstore.modules.cart.dto.CartDTO;
-import org.generalstore.modules.cart.entity.Cart;
+import org.generalstore.modules.cart.core.dto.CartDTO;
+import org.generalstore.modules.cart.core.entity.Cart;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;

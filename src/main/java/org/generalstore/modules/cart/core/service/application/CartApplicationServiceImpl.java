@@ -1,12 +1,12 @@
-package org.generalstore.modules.cart.service.application;
+package org.generalstore.modules.cart.core.service.application;
 
 import lombok.RequiredArgsConstructor;
-import org.generalstore.modules.cart.dto.CartDTO;
-import org.generalstore.modules.cart.entity.Cart;
-import org.generalstore.modules.cart.factory.CartFactory;
-import org.generalstore.modules.cart.mapper.CartMapper;
-import org.generalstore.modules.cart.service.domain.CartDomainService;
-import org.generalstore.modules.user.provider.UserPort;
+import org.generalstore.modules.cart.core.dto.CartDTO;
+import org.generalstore.modules.cart.core.entity.Cart;
+import org.generalstore.modules.cart.core.factory.CartFactory;
+import org.generalstore.modules.cart.core.mapper.CartMapper;
+import org.generalstore.modules.cart.core.service.domain.CartDomainService;
+import org.generalstore.modules.user.adapter.UserPort;
 import org.springframework.stereotype.Service;
 
 @Service

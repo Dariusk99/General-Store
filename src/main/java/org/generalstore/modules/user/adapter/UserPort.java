@@ -1,4 +1,4 @@
-package org.generalstore.modules.user.provider;
+package org.generalstore.modules.user.adapter;
 
 public interface UserPort {
 

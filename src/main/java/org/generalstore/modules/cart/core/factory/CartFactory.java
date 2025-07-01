@@ -1,6 +1,6 @@
-package org.generalstore.modules.cart.factory;
+package org.generalstore.modules.cart.core.factory;
 
-import org.generalstore.modules.cart.entity.Cart;
+import org.generalstore.modules.cart.core.entity.Cart;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;

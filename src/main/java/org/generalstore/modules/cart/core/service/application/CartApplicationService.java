@@ -1,6 +1,6 @@
-package org.generalstore.modules.cart.service.application;
+package org.generalstore.modules.cart.core.service.application;
 
-import org.generalstore.modules.cart.dto.CartDTO;
+import org.generalstore.modules.cart.core.dto.CartDTO;
 
 public interface CartApplicationService {
 

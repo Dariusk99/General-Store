@@ -1,4 +1,4 @@
-package org.generalstore.modules.user.provider;
+package org.generalstore.modules.user.adapter;
 
 import lombok.RequiredArgsConstructor;
 import org.generalstore.modules.user.service.application.UserApplicationService;
