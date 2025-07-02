@@ -18,7 +18,6 @@ class ProductApplicationServiceImpl implements ProductApplicationService {
     @Override
     public ProductDTO addProduct(AddProductDTO sourceDTO) {
         Product product = productMapper.toAddEntity(sourceDTO);
-
         return productMapper.toDTO(productDomainService.addProduct(product));
     }
 }

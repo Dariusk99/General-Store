@@ -1,9 +1,8 @@
-package org.generalstore.modules.cart.service.application;
+package org.generalstore.modules.cart.core.service.application;
 
 import org.generalstore.modules.cart.core.dto.CartDTO;
 import org.generalstore.modules.cart.core.entity.Cart;
 import org.generalstore.modules.cart.core.mapper.CartMapper;
-import org.generalstore.modules.cart.core.service.application.CartApplicationServiceImpl;
 import org.generalstore.modules.cart.core.service.domain.CartDomainService;
 import org.generalstore.modules.user.adapter.UserPort;
 import org.generalstore.modules.user.entity.User;
@@ -13,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -35,7 +35,7 @@ public class CartApplicationServiceImplTest {
     private CartApplicationServiceImpl cartApplicationService;
 
     @Test
-    void getCartOrCreate_shouldReturnCartByUserId_whenUserExists() {
+    void getCartOrCreate_shouldReturnUserCartByUserId_whenUserExists() {
         // Arrange
         String sourceUsername = "marek";
         Long userId = 1L;
@@ -54,7 +54,8 @@ public class CartApplicationServiceImplTest {
 
         Cart cartFromDb = new Cart(
                 null,
-                userFromCart
+                userFromCart,
+                new ArrayList<>()
         );
 
         CartDTO expectedResult = new CartDTO(
@@ -66,7 +67,7 @@ public class CartApplicationServiceImplTest {
         when(cartMapper.toDTO(cartFromDb)).thenReturn(expectedResult);
 
         // Act
-        CartDTO actualResult = cartApplicationService.getCartOrCreate(sourceUsername, localStorageCartDTO);
+        CartDTO actualResult = cartApplicationService.getUserCartOrCreate(sourceUsername, localStorageCartDTO);
 
         // Assert
         assertThat(actualResult)
@@ -76,5 +77,11 @@ public class CartApplicationServiceImplTest {
         verify(cartDomainService).getCartByUserId(userId);
         verify(userPort).getUserId(sourceUsername);
         verify(cartMapper).toDTO(cartFromDb);
+    }
+
+    @Test
+    void addProductToCart_returnCartDTO_whenProductAddSuccessful() {
+        Long productId = 1L;
+        String sourceUsername = "marek";
     }
 }

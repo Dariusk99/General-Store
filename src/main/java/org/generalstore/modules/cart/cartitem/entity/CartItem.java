@@ -1,10 +1,8 @@
 package org.generalstore.modules.cart.cartitem.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.generalstore.modules.cart.core.entity.Cart;
 import org.generalstore.modules.product.entity.Product;
 
 @Entity
@@ -13,6 +11,7 @@ import org.generalstore.modules.product.entity.Product;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CartItem {
 
     @Id
@@ -26,4 +25,8 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false)
+    private Cart cart;
 }

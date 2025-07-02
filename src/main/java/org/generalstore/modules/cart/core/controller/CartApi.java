@@ -6,10 +6,8 @@ import org.generalstore.modules.cart.core.service.application.CartApplicationSer
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/carts")
@@ -18,10 +16,13 @@ public class CartApi {
 
     private final CartApplicationService cartApplicationService;
 
+    @Transactional
     @PostMapping
-    public ResponseEntity<?> addProductToCart(@AuthenticationPrincipal UserDetails user, @RequestBody(required = false) CartDTO localStorageCart) {
+    public ResponseEntity<?> addProductToCart(@AuthenticationPrincipal UserDetails user,
+                                              @RequestBody(required = false) CartDTO localStorageCart,
+                                              @RequestParam(name = "productId") Long productId) {
         String username = user != null ? user.getUsername() : null;
-        CartDTO cartDTO = cartApplicationService.getCartOrCreate(username, localStorageCart);
+        CartDTO cartDTO = cartApplicationService.addProductToCart(productId, username, localStorageCart);
         return ResponseEntity.ok(cartDTO);
     }
 }

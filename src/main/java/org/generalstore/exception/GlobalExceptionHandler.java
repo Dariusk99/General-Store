@@ -1,5 +1,9 @@
 package org.generalstore.exception;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,7 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
+@Order(10)
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
      /*
         Global exception handler for catch all uncaught errors
@@ -18,12 +25,10 @@ public class GlobalExceptionHandler {
     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllUncaught(Exception e) {
+        log.error("Unexpected error", e);
         Map<String, Object> errorBody = Map.of(
-                "message", "Unexpected error."
+                "message", "Unexpected server error."
         );
-        e.printStackTrace();
-        System.out.println("-----------Błąd-----------");
-        System.out.println(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
     }
 
@@ -42,5 +47,13 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(body);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> entityNotFound(EntityNotFoundException e) {
+        Map<String, Object> errorBody = Map.of(
+                "message", e.getMessage()
+        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
     }
 }

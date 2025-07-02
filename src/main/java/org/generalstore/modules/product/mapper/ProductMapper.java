@@ -11,6 +11,9 @@ import org.mapstruct.ReportingPolicy;
 public interface ProductMapper {
 
     ProductDTO toDTO(Product product);
+
+    Product toEntity(ProductDTO productDTO);
+
     @Mapping(target = "id", ignore = true)
     Product toAddEntity(AddProductDTO addProductDTO);
 }

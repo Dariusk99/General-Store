@@ -1,5 +1,6 @@
 package org.generalstore.modules.product.service.domain;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.generalstore.modules.product.entity.Product;
 import org.generalstore.modules.product.repository.ProductRepository;
@@ -28,5 +29,11 @@ class ProductDomainServiceImpl implements ProductDomainService {
         productFromDb.setQuantity(summedQuantity);
 
         return productRepository.save(productFromDb);
+    }
+
+    @Override
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found with id: " + id));
     }
 }

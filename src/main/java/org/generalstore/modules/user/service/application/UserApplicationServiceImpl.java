@@ -11,6 +11,8 @@ import org.generalstore.modules.user.mapper.UserMapper;
 import org.generalstore.modules.user.service.domain.UserDomainService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 class UserApplicationServiceImpl implements UserApplicationService {
@@ -27,7 +29,7 @@ class UserApplicationServiceImpl implements UserApplicationService {
         User savedUser = userDomainService.register(user);
 
         // Create Cart for User
-        Cart cart = new Cart(null, savedUser);
+        Cart cart = new Cart(null, savedUser, new ArrayList<>());
         cartPort.saveCartForUser(cart);
 
         // Return User DTO

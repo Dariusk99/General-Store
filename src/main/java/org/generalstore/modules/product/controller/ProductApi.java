@@ -7,6 +7,7 @@ import org.generalstore.modules.product.service.application.ProductApplicationSe
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ public class ProductApi {
     private final ProductApplicationService productApplicationService;
 
     @PostMapping
-    public ResponseEntity<?> addProduct(AddProductDTO requestDTO) {
+    public ResponseEntity<?> addProduct(@RequestBody AddProductDTO requestDTO) {
         ProductDTO saved = productApplicationService.addProduct(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }

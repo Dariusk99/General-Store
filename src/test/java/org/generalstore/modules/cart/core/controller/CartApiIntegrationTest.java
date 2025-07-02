@@ -1,4 +1,4 @@
-package org.generalstore.modules.cart.controller;
+package org.generalstore.modules.cart.core.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.generalstore.modules.auth.util.JwtUtil;
@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -56,7 +57,8 @@ public class CartApiIntegrationTest {
     void addProductToCart_returnNewLocalStorageCart_whenNotAuthenticated() throws Exception {
         // Arrange
         CartDTO localStorageCartDTO = new CartDTO(
-                UUID.randomUUID()
+                UUID.randomUUID(),
+                new ArrayList<>()
         );
 
         // Act && Assert

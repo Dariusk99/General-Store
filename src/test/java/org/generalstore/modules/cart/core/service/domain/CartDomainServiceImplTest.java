@@ -1,8 +1,7 @@
-package org.generalstore.modules.cart.service.domain;
+package org.generalstore.modules.cart.core.service.domain;
 
 import org.generalstore.modules.cart.core.entity.Cart;
 import org.generalstore.modules.cart.core.repository.CartRepository;
-import org.generalstore.modules.cart.core.service.domain.CartDomainServiceImpl;
 import org.generalstore.modules.user.entity.Role;
 import org.generalstore.modules.user.entity.User;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -42,7 +42,8 @@ public class CartDomainServiceImplTest {
 
         Cart expectedResult = new Cart(
                 null,
-                expectedUser
+                expectedUser,
+                new ArrayList<>()
         );
 
         when(cartRepository.findByUserId(sourceUserId)).thenReturn(expectedResult);
