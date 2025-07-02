@@ -1,17 +1,16 @@
 package org.generalstore.modules.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.generalstore.modules.auth.util.JwtUtil;
 import org.generalstore.modules.user.dto.RegisterUserDTO;
 import org.generalstore.modules.user.dto.UserDTO;
 import org.generalstore.modules.user.service.application.UserApplicationService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -32,16 +31,11 @@ public class UserApiTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    UserApplicationService userApplicationService;
+    @MockitoBean
+    private UserApplicationService userApplicationService;
 
-    @TestConfiguration
-    static class MockConfig {
-        @Bean
-        UserApplicationService userApplicationService() {
-            return Mockito.mock(UserApplicationService.class);
-        }
-    }
+    @MockitoBean
+    private JwtUtil jwtUtil;
 
     @Test
     void registerUser_shouldReturn201AndUserDTO_whenRequestIsValid () throws Exception {
@@ -57,7 +51,7 @@ public class UserApiTest {
                 sourceUserDTO.getUsername()
         );
 
-        when(userApplicationService.registerUser(any(RegisterUserDTO.class)))
+        when(userApplicationService.registerUserWithCart(any(RegisterUserDTO.class)))
                 .thenReturn(expectedResponse);
 
         // Act & Assert

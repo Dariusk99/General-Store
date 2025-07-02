@@ -31,7 +31,7 @@ public class UserApiIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void registerUser_shouldReturn201AndUserDTO_whenRequestIsValid () throws Exception {
+    void registerUser_shouldReturn201AndUserDTO_whenRequestIsValid() throws Exception {
         // Arrange
         RegisterUserDTO sourceUserDTO = new RegisterUserDTO(
                 "username",

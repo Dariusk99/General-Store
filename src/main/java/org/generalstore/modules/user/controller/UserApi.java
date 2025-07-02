@@ -7,6 +7,7 @@ import org.generalstore.modules.user.dto.UserDTO;
 import org.generalstore.modules.user.service.application.UserApplicationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +20,10 @@ public class UserApi {
 
     private final UserApplicationService userApplicationService;
 
+    @Transactional
     @PostMapping
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserDTO dto) {
-        UserDTO saved = userApplicationService.registerUser(dto);
+        UserDTO saved = userApplicationService.registerUserWithCart(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
