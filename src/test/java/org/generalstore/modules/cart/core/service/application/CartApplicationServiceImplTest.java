@@ -40,7 +40,8 @@ public class CartApplicationServiceImplTest {
         String sourceUsername = "marek";
         Long userId = 1L;
         CartDTO localStorageCartDTO = new CartDTO(
-                UUID.randomUUID()
+                UUID.randomUUID(),
+                new ArrayList<>()
         );
 
         User userFromCart = new User(
@@ -59,7 +60,8 @@ public class CartApplicationServiceImplTest {
         );
 
         CartDTO expectedResult = new CartDTO(
-                null
+                null,
+                new ArrayList<>()
         );
 
         when(cartDomainService.getCartByUserId(userId)).thenReturn(cartFromDb);
