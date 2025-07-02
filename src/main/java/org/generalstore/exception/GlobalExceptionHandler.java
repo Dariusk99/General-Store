@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleAllUncaught(Exception e) {
-        log.error("Unexpected error", e);
+//        log.error("Unexpected error", e);
         Map<String, Object> errorBody = Map.of(
                 "message", "Unexpected server error."
         );
